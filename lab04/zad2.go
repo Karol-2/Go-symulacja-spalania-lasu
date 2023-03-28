@@ -26,9 +26,9 @@ func main() {
 
 		for j := 0; j < len(macierzA); j++ {
 
-			//for k := 0; k < len(macierzB); k++ {
-			macierzC[i][j] = macierzA[i][j] * macierzB[j][i]
-			//}
+			for k := 0; k < len(macierzB); k++ {
+				macierzC[i][j] = macierzA[i][j] * macierzB[j][i]
+			}
 		}
 	}
 

@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	// na nastepnych zajęciach będzie jakby sprawdzian czego się nauczyliśmy
+
 	wektor1 := make([]int64, 20)
 	wektor2 := make([]int64, 20)
 	zsumowane := make([]int64, 20)
