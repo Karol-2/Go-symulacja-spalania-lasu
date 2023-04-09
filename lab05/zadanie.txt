@@ -1,0 +1,54 @@
+    Plik "todo" jest najczęściej plikiem tekstowym, w którym pilni studenci zapisują zadania do wykonania. Pracując często w terminalu mają taki "pod ręką" i mogą w nim łatwo wprowadzić zmiany. Takie pliki często tworzy się także z intencją tworzenia list rzeczy do zrobienia w programach (konwertowane są potem na "issue"), list zakupów, lub list DONE, które zawierają spis wykonanych czynności (przydatne w korpo do raportów). Format takiego pliku może być następujący:
+
+# znak '#' rozpoczyna komentarz, i cała linia z pliku jest ignorowana
+# każdy wiersz w pliku to albo komentarz albo opis zadania, wiersze tekst nie zawijają się
+[ ] to jest zadanie do zrobienia - puste nawiasy kwadratowe ze spacją w środku, rozpoczynające wiersz
+[x] zadanie oznaczone jako wykonane, tzw. DONE
+[-] zadanie oznaczone jako porzucone, które nie zostało wykonane i nie będzie wykonane w przyszłości, tzw. NOPE
+[+] zadanie w trakcie wykonywania (przydatne gdy wykonanie trwa jakiś czas)
+
+
+Poziom 1.
+
+Napisz program w Go, który wczyta plik todo.txt lub inny o jakiejś podobnej nazwie umieszczony na dysku, i wyświetli jego zawartość. Nazwa pliku może być podana jako argument wywołania programu, zatem może być inna. Zadbaj o to, aby program poprawnie reagował na niespodziewane lub przypadkowe sytuacje, np. brak pliku, brak praw dostępu lub gdy plik jest np. katalogiem. Program powinien uruchamiać się i pisać w terminalu.
+
+Poziom 2.
+
+Ulepsz swój program, aby wypisywał poszczególne wiersza z pliku TODO ale w kolorze, odpowiadającym statusowi zadania. Na przykład, komentarze mogą być wypisywane na szaro, nowe rzeczy do zrobienia na żółto, rzeczy zrobione na zielono a rzeczy w trakcie np. na czerwono. Możesz samodzielnie zdefiniować swój schemat kolorów, według uznania. Wypisywanie kolorów możesz zrealizować za pomocą kodów ANSI (o których wspomniałem na wykładzie).
+
+Poziom 3.
+
+Swój program możesz wyposażyć w możliwość obsługi opcji przekazywanych w wierszu poleceń. Na przykład, dodaj opcję --nocolor (lub podobną), która wyłączy funkcję dodaną na poziomie 2. Wtedy program powinien wypisywać kolejne zadania z pliku bez żadnego kolorowania lub modyfikacji (przydatne to może być przy przetwarzaniu strumieniowym). Dodaj opcję która pozwoli wyświetlić wyłącznie wiersze zadań przeznaczonych do zrobienia (nowych), lub tylko zrobionych, lub odrzuconych. Taki program pozwoli szybko wyświetlić zadania, które mają wyłącznie określony status i żadnych innych. Podpowiedź: możesz wykorzystać bibliotekę flag, która bardzo ułatwia pisanie obsługi opcji uruchomieniowych programu.
+
+Poziom 4.
+
+Dodaj do programu możliwość przetworzenia wielu plików TODO, w taki sposób, że po podaniu ich nazw w wierszu poleceń, program wczytuje wszystkie z nich, i wypisuje całość, którą wczytał. Razem z opcjami dodanymi na poziomie 3, pozwoli Ci to na szybkie wypisywanie zadań pochodzących z wielu plików (a w przyszłości - z wielu źródeł). Zastanów się nad możliwością wczytywania tekstu ze standardowego wejścia. Gdyby umożliwić taką funkcję, program mógłby działać jako filtr agregujący zadania z wielu plików i pozwalający na dopisanie nowych, a następnie poprzez przekierowanie do pliku, można byłoby utworzyć plik ze wszystkimi zadaniami.
+
+Poziom 5.
+
+Dopisz do swojego programu obsługę linii poleceń. Ma to działać w podobny sposób jak np. konsola, program terminala, cmd lub prompt do mysql lub postgress. Program w tym trybie pracy powinien wyświetlić znak zachęty, a następnie oczekiwać na wpisanie jakiegoś polecenia, zakończonego wciśnięciem klawisza ENTER. Następnie polecenie to powinno zostać wykonane. Zaprogramuj wykonanie na przykład takich poleceń jak "list", "open [nazwa pliku]", "exit", i innych. Możesz dodać polecenia, które będą wykonywać jakieś operacje na zadaniach wczytanych w programie, np. wyświetlanie listy, lub nawet wyświetlanie oparte o jakieś dodatkowe cechy (np. "list 5" wyświetli wyłącznie treść zadania 5, a "find zupa" pokazałoby wszystkie zadania, w których pojawia się słowo "zupa"). Język poleceń programu można tak rozbudować, aby możliwe było również dodanie zadania do listy, np. poprzez polecenie "add [tutaj treść]". Podpowiedź: zauważ, że początkowe słowa w treści poleceń to zawsze takie słowa, które możesz pobrać w formie wycinka i w ten sposób określić, co za polecenie wpisano.
+
+Poziom 6.
+
+Możesz w swoim programie odejść od pliku tekstowego, i zastosować rozwiązanie bardziej ogólne, np. bazę danych (SQLite na początek będzie dobrym wyborem). Ponieważ Twój program jest interfejsem pomiędzy Tobą a plikiem, i ponieważ pracujesz z wpisami nie bezpośrednio, tylko za pomocą swojego programu, nie jest tak bardzo istotne, że pod warstwą obsługi leży akurat plik tekstowy. Może to być cokolwiek, a jeżeli zastosujesz bazę danych, uprościsz sobie przyszłe rozwinięcia tego zadania, i odpadną Ci możliwe problemy wynikające z dostępu równoległego. Zatem, program może od teraz pracować albo na pliku tekstowym w trybie bezpośrednim, albo np. na bazie danych, do której podłączenie nastąpi po podaniu odpowiedni opcji.
+
+Poziom 7
+
+Dodaj do program funkcję TUI, czyli Text User Interface. W uproszczeniu, możesz wykorzystać kody ANSI, aby narysować ramki, lub oddzielić zadania wykonane od niewykonanych w taki sposób, aby opanować cały obszar terminala. Program tego typu może wykorzystywać bibliotekę do zarządzania terminalem, np. ncurses lub podobną. Pozwala ona ukryć kursor, oraz umożliwia obsługę naciśnięć pojedynczych klawiszy (dlatego np. w takim programie możesz zaprogramować aby naciśnięcie q kończyło program, a np. naciśnięcie strzałek przewijało listę zadań). Napisanie takiego programu daje Ci narzędzie pełnoekranowe, i zaczynając od tego poziomu wchodzisz do obszaru interfejsów użytkownika oraz dużo bogatszych możliwości zabawy.
+
+Poziom 8.
+
+Dodaj do programu możliwość otwierania i zapisywania plików, oraz dodawania, usuwania, zmiany i powielania zadań. W tym ceiu możesz wykorzystać biblioteki do zarządzania wierszem edycji, np. readline. Dzięki temu będziesz w programie udostępniać możliwość edycji wpisanych zadań. Zmianę stanu zadania można byłoby także aktywować jakimś klawiszem, np. d przełączałoby status DONE, n np. NOPE, itp. Samo edytowanie zadania w formie tekstu można byłoby aktywować np. klawiszem e, co udostępniałoby wiersz tekstu do edycji, po której ENTER kończyłby ją i program wracałby do pracy w trybie komend jednoliterowych (podobnie jak np. VIM).
+
+Poziom 9.
+
+Zastanów się, jak rozwiązać problem synchronizacji Twojej listy TODO z innymi komputerami połączonymi w sieć. Może to być sytuacja rzeczywista, gdy pracując w pracy dodajesz jakieś zadania, a potem wracając do domu lub przenosząc się na swój osobisty komputer chcesz mieć uaktualnioną listę. Synchronizacja pomiędzy komputerami może być zrobiona na wiele różnych sposób. Możesz uznać, że wystarczy Ci proste przesłanie pliku przez np. SSH ze wszystkich serwerów do których masz dostęp i wybranie jako głównego tego pliku, który ma ostatnią datę modyfikacji. Możesz zrobić to za pomocą repo, utrzymując jedno aktualne źródło po każdej zmianie i przed rozpoczęciem pracy pobierając z niego odpowiednio świeżą wersję. Kombinuj: tutaj nie ma jednego rozwiązania, a szczególne własności sieci firmowych lub domowych mogą wymagać pomysłowości lub obejść. W niektórych przypadkach można wykorzystać tunelowanie. Wykonując zadanie na tym poziomie uzyskujesz dostęp do narzędzia, które będzie prezentowało Ci zawsze aktualną listę zadań, niezależnie od tego, w którym miejscu taką listę zdefiniujesz. Warto się nad tym pomęczyć, ponieważ ten poziom to już poziom komercyjny (porównaj funkcjonalności np. z Obsidian).
+
+Poziom 10.
+
+Dodaj do swojego programu możliwość komunikacji w architekturze klient-server. Niech Twój program uruchomiony na jakiejś lokalizacji udostępnia listę TODO, a inne - łącząc się do niego, niech tę listę pobierają i modyfikują, następnie odsyłając zmiany. Możesz tu wykorzystać protokół HTTP lub stworzyć własny język komunikacji pomiędzy programami. Możesz przesyłać dane za pomocą JSON, XML lub w inny sposób - zależnie od wybranego przez siebie rozwiązania. Jeżeli chcesz, Twój program może udostępniać usługę w formie strony internetowej, w której będzie można wyświetlać, przeglądać i modyfikować zadania umieszczone tam w formie listy. Jest to odmienny rodzaj interfejsu od tego, o którym pisałem w poziomie 7 - zamiast okna tekstowego, masz teraz okno przeglądarki, w której możliwe jest umieszczenie ładniejszych elementów.
+
+Poziom 11 i wyższe:
+
+Samodzielnie możesz teraz do programu swoje własne rozszerzenia i pomysły, modyfikując to zadanie. Na przykład możesz wejść w tematykę IoT, albo zrobić osobne GUI wykorzystujące zaawansowane elementy interfejsów takie jak menu, przyciski lub pola edycyjne. W Go możesz wykorzystać biblioteki GTK3 lub QT, ale ich instalacja, razem z całym środowiskiem, którego mogą wymagać jest dość złożona i wymaga dużej wiedzy z zakresu administrowania systemem. Na naszej pracowni nie mamy wsparcia do pracy z takimi dużymi programami i bibliotekami, zatem możesz pracować nad tymi poziomami zadania jedynie samodzielnie, na własnoręcznie zbudowanych środowiskach. Pamiętaj ,że w każdym momencie możesz dokonać modyfikacji poziomów tego zadania, dodać od siebie jakieś nowe funkcje i rozszerzenia. Zadanie jest zamknięte, i przedstawiam je jako zachętę do trenowania swoich umiejętności w programowaniu.
+<https://teams.microsoft.com/l/message/19:57b903384d83472fae2b494c71cd3b0a@thread.tacv2/1680162012970?tenantId=2d9a5a9f-69b7-4940-a1a6-af55f35ba069&amp;groupId=bbe1f538-5d6b-490f-a164-3bdb47804e4a&amp;parentMessageId=1680162012970&amp;teamName=Go-INFp-2023-sem4&amp;channelName=Ogłoszenia&amp;createdTime=1680162012970&amp;allowXTenantAccess=false>
