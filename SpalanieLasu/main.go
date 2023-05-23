@@ -1,15 +1,20 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
+	"log"
 	"math/rand"
+	"os"
+	"strconv"
 )
 
 // 0 - puste
 // 1 - drzewo
 // 2 - ogień
+// porusza się tylko prawo lewo góra dół
 
-func ileDrzew(las [][]int) {
+func policzDrzewa(las [][]int) int {
 	drzewa := 0
 	for i := 0; i < len(las); i++ {
 		for j := 0; j < len(las); j++ {
@@ -18,7 +23,7 @@ func ileDrzew(las [][]int) {
 			}
 		}
 	}
-	fmt.Println("Ilość drzew w lesie: ", drzewa)
+	return drzewa
 }
 func pokazPlansze(las [][]int) {
 	for i := 0; i < len(las); i++ {
@@ -34,7 +39,6 @@ func pokazPlansze(las [][]int) {
 		}
 		fmt.Println()
 	}
-	ileDrzew(las)
 }
 func rozprzestrzenianieOgnia(las [][]int, pozycjaX int, pozycjaY int) {
 	if pozycjaY < 0 || pozycjaY >= len(las) ||
@@ -42,25 +46,25 @@ func rozprzestrzenianieOgnia(las [][]int, pozycjaX int, pozycjaY int) {
 		return
 	}
 
-	// powyżej
+	// Sprawdzanie górnego sąsiada
 	if pozycjaY > 0 && las[pozycjaY-1][pozycjaX] == 1 {
 		las[pozycjaY-1][pozycjaX] = 2
 		rozprzestrzenianieOgnia(las, pozycjaX, pozycjaY-1)
 	}
 
-	// poniżej
+	// Sprawdzanie dolnego sąsiada
 	if pozycjaY < len(las)-1 && las[pozycjaY+1][pozycjaX] == 1 {
 		las[pozycjaY+1][pozycjaX] = 2
 		rozprzestrzenianieOgnia(las, pozycjaX, pozycjaY+1)
 	}
 
-	// po lewej
+	// Sprawdzanie lewego sąsiada
 	if pozycjaX > 0 && las[pozycjaY][pozycjaX-1] == 1 {
 		las[pozycjaY][pozycjaX-1] = 2
 		rozprzestrzenianieOgnia(las, pozycjaX-1, pozycjaY)
 	}
 
-	// po prawej
+	// Sprawdzanie prawego sąsiada
 	if pozycjaX < len(las[pozycjaY])-1 && las[pozycjaY][pozycjaX+1] == 1 {
 		las[pozycjaY][pozycjaX+1] = 2
 		rozprzestrzenianieOgnia(las, pozycjaX+1, pozycjaY)
@@ -75,12 +79,30 @@ func ogien(las [][]int) {
 	if las[pozycjaStrzaluY][pozycjaStrzaluX] == 1 {
 		las[pozycjaStrzaluY][pozycjaStrzaluX] = 2
 		fmt.Println("Strzał trafił na drzewo!")
-		rozprzestrzenianieOgnia(las, pozycjaStrzaluY, pozycjaStrzaluX)
+		rozprzestrzenianieOgnia(las, pozycjaStrzaluX, pozycjaStrzaluY)
 	} else {
 		fmt.Println("Strzał nie trafił w drzewo!")
 	}
 
 }
+
+func zapiszDoCSV(rozmiarPlanszy string, iloscDrzew, pozostaleDrzewa, spaloneDrzewa int) {
+	file, err := os.Create("dane.csv")
+	if err != nil {
+		log.Fatal("Nie można utworzyć pliku CSV:", err)
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	row := []string{rozmiarPlanszy, strconv.Itoa(iloscDrzew), strconv.Itoa(pozostaleDrzewa), strconv.Itoa(spaloneDrzewa)}
+	err = writer.Write(row)
+	if err != nil {
+		log.Fatal("Błąd podczas zapisu danych do pliku CSV:", err)
+	}
+}
+
 func sadzenieDrzew(iloscDrzew int, las [][]int) {
 	posadzoneDrzewa := 0
 	for posadzoneDrzewa < iloscDrzew {
@@ -90,8 +112,8 @@ func sadzenieDrzew(iloscDrzew int, las [][]int) {
 					break
 				}
 
-				czy_posadzic := rand.Intn(2)
-				if czy_posadzic == 0 && las[j][i] == 0 {
+				czyPosadzic := rand.Intn(2)
+				if czyPosadzic == 0 && las[j][i] == 0 {
 					las[j][i] = 1
 					posadzoneDrzewa++
 				}
@@ -120,4 +142,9 @@ func main() {
 	pokazPlansze(las)
 	ogien(las)
 	pokazPlansze(las)
+	pozostaleDrzewa := policzDrzewa(las)
+	spaloneDrzewa := iloscDrzew - pozostaleDrzewa
+	fmt.Println("Ilość drzew: ", pozostaleDrzewa)
+	fmt.Println("Spalone drzewa: ", spaloneDrzewa)
+	zapiszDoCSV("10x10", iloscDrzew, pozostaleDrzewa, spaloneDrzewa)
 }
