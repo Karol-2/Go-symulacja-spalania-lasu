@@ -12,7 +12,7 @@ import (
 // 0 - puste
 // 1 - drzewo
 // 2 - ogień
-// porusza się tylko prawo lewo góra dół
+// ogień porusza się tylko prawo lewo góra dół
 
 func policzDrzewa(las [][]int) int {
 	drzewa := 0
@@ -72,8 +72,9 @@ func rozprzestrzenianieOgnia(las [][]int, pozycjaX int, pozycjaY int) {
 }
 
 func ogien(las [][]int) {
-	pozycjaStrzaluX := rand.Intn(len(las))
-	pozycjaStrzaluY := rand.Intn(len(las[0]))
+	pozycjaStrzaluX := rand.Intn(len(las[0]))
+	pozycjaStrzaluY := rand.Intn(len(las))
+
 	fmt.Println("Pozycja strzału", pozycjaStrzaluX, pozycjaStrzaluY)
 
 	if las[pozycjaStrzaluY][pozycjaStrzaluX] == 1 {
@@ -86,28 +87,38 @@ func ogien(las [][]int) {
 
 }
 
-func zapiszDoCSV(rozmiarPlanszy string, iloscDrzew, pozostaleDrzewa, spaloneDrzewa int) {
-	file, err := os.Create("dane.csv")
+func zapiszDoCSV(rozmiar string, iloscDrzew, pozostaleDrzewa, spaloneDrzewa int) {
+	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatal("Nie można utworzyć pliku CSV:", err)
+		log.Fatal("Nie można otworzyć pliku CSV:", err)
 	}
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	row := []string{rozmiarPlanszy, strconv.Itoa(iloscDrzew), strconv.Itoa(pozostaleDrzewa), strconv.Itoa(spaloneDrzewa)}
+	row := []string{
+		rozmiar,
+		strconv.Itoa(iloscDrzew),
+		strconv.Itoa(pozostaleDrzewa),
+		strconv.Itoa(spaloneDrzewa),
+	}
+
 	err = writer.Write(row)
 	if err != nil {
-		log.Fatal("Błąd podczas zapisu danych do pliku CSV:", err)
+		log.Fatal("Błąd podczas zapisu do pliku CSV:", err)
 	}
+
+	writer.Flush() // Dodatkowy flush, aby upewnić się, że dane są zapisane
+
+	log.Println("Dane zostały zapisane do pliku CSV.")
 }
 
 func sadzenieDrzew(iloscDrzew int, las [][]int) {
 	posadzoneDrzewa := 0
 	for posadzoneDrzewa < iloscDrzew {
-		for i := 0; i < 10; i++ {
-			for j := 0; j < 10; j++ {
+		for i := 0; i < len(las[0]); i++ {
+			for j := 0; j < len(las); j++ {
 				if posadzoneDrzewa == iloscDrzew {
 					break
 				}
@@ -122,29 +133,37 @@ func sadzenieDrzew(iloscDrzew int, las [][]int) {
 
 	}
 }
-
-func main() {
-	las := [][]int{ //10x10
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+func generujDzialke(szerokosc, wysokosc int) [][]int {
+	las := make([][]int, wysokosc)
+	for i := 0; i < wysokosc; i++ {
+		las[i] = make([]int, szerokosc)
 	}
-	iloscDrzew := 30
+	return las
+}
+func symulacja(szerokosc, wysokosc, iloscDrzew int) {
+	las := generujDzialke(szerokosc, wysokosc)
 
 	sadzenieDrzew(iloscDrzew, las)
+	drzewaPrzed := policzDrzewa(las)
 	pokazPlansze(las)
 	ogien(las)
 	pokazPlansze(las)
-	pozostaleDrzewa := policzDrzewa(las)
-	spaloneDrzewa := iloscDrzew - pozostaleDrzewa
-	fmt.Println("Ilość drzew: ", pozostaleDrzewa)
-	fmt.Println("Spalone drzewa: ", spaloneDrzewa)
-	zapiszDoCSV("10x10", iloscDrzew, pozostaleDrzewa, spaloneDrzewa)
+	drzewaPo := policzDrzewa(las)
+	spaloneDrzewa := drzewaPrzed - drzewaPo
+	fmt.Println("Ilość drzew:", drzewaPo)
+	fmt.Println("Spalone drzewa:", spaloneDrzewa)
+	//rozmiar := fmt.Sprintf("%dx%d", szerokosc, wysokosc)
+	//zapiszDoCSV(rozmiar, iloscDrzew, drzewaPo, spaloneDrzewa)
+}
+
+func main() {
+	szerokosc := 15
+	wysokosc := 10
+	iloscDrzew := 5
+	symulacja(szerokosc, wysokosc, iloscDrzew)
+
+	//for i := 0; i < 100; i++ {
+	//	symulacja(szerokosc, wysokosc, iloscDrzew)
+	//}
+
 }
