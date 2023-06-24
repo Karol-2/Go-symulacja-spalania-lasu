@@ -79,6 +79,8 @@ func opcjaTrzecia() {
 	las.Symulacja(szerokosc, wysokosc, iloscDrzew)
 }
 func wyczyscPlik() {
+	wd, _ := os.Getwd()
+	fmt.Println(wd)
 	filePath := "data.csv"
 
 	file, err := os.OpenFile(filePath, os.O_TRUNC|os.O_WRONLY, 0644)

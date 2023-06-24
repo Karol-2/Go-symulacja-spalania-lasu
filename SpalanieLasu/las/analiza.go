@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func ObliczProecnty(data map[int][]int) map[int]float64 {
+func ObliczProcenty(data map[int][]int) map[int]float64 {
 	averages := make(map[int]float64)
 
 	for numTrees, values := range data {
@@ -63,7 +63,7 @@ func Analiza() {
 		data[numTrees] = []int{numTrees, treesPo, burnedTrees}
 	}
 
-	averages := ObliczProecnty(data)
+	averages := ObliczProcenty(data)
 
 	for numTrees, percentage := range averages {
 		fmt.Printf("Ilość drzew: %d, Procent drzew które przetrwały: %.2f%%\n", numTrees, percentage)
