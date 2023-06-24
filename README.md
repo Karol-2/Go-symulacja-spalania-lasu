@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Symulacja Spalania lasu</title>
+ 
 </head>
 <body>
   <h1>Symulacja Spalania Lasu</h1>
